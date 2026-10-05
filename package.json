@@ -1,0 +1,18 @@
+{
+  "name": "nxtwave-ai60-campaign",
+  "version": "1.0.0",
+  "description": "Production-ready website for simulated NxtWave campaign: Build Your First AI Project in 60 Minutes (500 Final-Year Engineering Registrations Goal)",
+  "scripts": {
+    "start": "npx serve -l 3000 .",
+    "serve": "python -m http.server 3000"
+  },
+  "keywords": [
+    "nxtwave",
+    "growth-campaign",
+    "edtech",
+    "referral-gamification",
+    "ai-workshop"
+  ],
+  "author": "Antigravity",
+  "license": "MIT"
+}

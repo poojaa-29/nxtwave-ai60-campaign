@@ -1,0 +1,1424 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Build Your First AI Project in 60 Minutes | NxtWave Workshop</title>
+  
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              50: '#eff6ff',
+              100: '#dbeafe',
+              400: '#60a5fa',
+              500: '#3b82f6',
+              600: '#2563eb',
+              700: '#1d4ed8',
+              900: '#1e3a8a',
+              950: '#0f172a'
+            },
+            techCyan: '#06B6D4',
+            techEmerald: '#10B981',
+            techAmber: '#F59E0B',
+            darkBg: '#070B14',
+            darkCard: '#121A2D',
+            darkBorder: '#1E293B'
+          },
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', 'Inter', 'sans-serif'],
+            mono: ['"JetBrains Mono"', 'monospace']
+          }
+        }
+      }
+    }
+  </script>
+
+  <!-- Lucide Icons -->
+  <script src="https://cdn.jsdelivr.net/npm/lucide@latest/dist/umd/lucide.js"></script>
+
+  <!-- Chart.js -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+  <!-- Canvas Confetti -->
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
+  <!-- Custom Styles -->
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body class="bg-[#070B14] text-slate-100 min-h-screen flex flex-col font-sans selection:bg-blue-600 selection:text-white">
+
+  <!-- Confetti Canvas -->
+  <canvas id="confetti-canvas"></canvas>
+
+  <!-- Toast Notification Container -->
+  <div id="toast-container"></div>
+
+  <!-- TOP DEMO NOTICE BANNER -->
+  <div class="bg-gradient-to-r from-blue-900 via-indigo-900 to-slate-900 border-b border-blue-500/30 text-xs px-4 py-2 flex flex-wrap items-center justify-between gap-2 shadow-lg">
+    <div class="flex items-center gap-2">
+      <span class="bg-blue-500 text-white font-bold px-2 py-0.5 rounded text-[10px] tracking-wide uppercase flex items-center gap-1">
+        <i data-lucide="shield-alert" class="w-3 h-3"></i> DEMO MODE ACTIVE
+      </span>
+      <span class="text-slate-300 hidden sm:inline">
+        Recruitment & Growth Challenge Prototype • Simulated Demo Data & Assumptions • Not a real workshop guarantee.
+      </span>
+    </div>
+    <div class="flex items-center gap-2">
+      <button id="pitch-tour-btn" class="bg-blue-600 hover:bg-blue-500 text-white font-semibold px-2.5 py-1 rounded text-xs flex items-center gap-1 transition shadow-sm">
+        <i data-lucide="play-circle" class="w-3.5 h-3.5"></i> 3-Min Pitch Tour
+      </button>
+      <button id="reset-demo-btn" class="bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white px-2.5 py-1 rounded text-xs flex items-center gap-1 transition border border-slate-700">
+        <i data-lucide="rotate-ccw" class="w-3 h-3"></i> Reset Demo Data
+      </button>
+    </div>
+  </div>
+
+  <!-- MAIN HEADER / NAVBAR -->
+  <header class="sticky top-0 z-50 bg-[#090E1A]/90 backdrop-blur-md border-b border-slate-800/80">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex items-center justify-between h-16">
+        
+        <!-- Brand Logo -->
+        <a href="#home" data-nav="home" class="flex items-center gap-3 group">
+          <div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-blue-600 to-cyan-400 flex items-center justify-center text-white font-black text-lg shadow-md shadow-blue-500/20 group-hover:scale-105 transition">
+            N
+          </div>
+          <div>
+            <div class="flex items-center gap-1.5">
+              <span class="font-extrabold text-base tracking-tight text-white">NxtWave</span>
+              <span class="bg-blue-500/20 text-blue-400 text-[10px] font-mono px-1.5 py-0.2 rounded border border-blue-500/30">AI 60</span>
+            </div>
+            <div class="text-[10px] text-slate-400 font-medium tracking-wide">60-Min AI Workshop Campaign</div>
+          </div>
+        </a>
+
+        <!-- Live Registration Ticker Badge (Center) -->
+        <div class="hidden lg:flex items-center gap-3 bg-slate-900/80 border border-slate-800 px-3.5 py-1 rounded-full text-xs">
+          <span class="flex h-2 w-2 relative">
+            <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+            <span class="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+          </span>
+          <span class="text-slate-400">Target: <strong id="header-target-regs" class="text-slate-200">500</strong></span>
+          <span class="text-slate-600">|</span>
+          <span class="text-slate-400">Current: <strong id="header-current-regs" class="text-emerald-400">438</strong></span>
+          <span class="text-slate-600">|</span>
+          <span class="text-slate-400">Remaining: <strong id="header-remaining-regs" class="text-cyan-400">62</strong> seats</span>
+        </div>
+
+        <!-- Navigation Links (Desktop) -->
+        <nav class="hidden md:flex items-center space-x-1 lg:space-x-2 text-xs font-medium">
+          <a href="#home" data-tab="home" class="nav-link px-3 py-2 rounded-md transition text-slate-400 hover:text-white">Home</a>
+          <a href="#register" data-tab="register" class="nav-link px-3 py-2 rounded-md transition text-slate-400 hover:text-white">Register</a>
+          <a href="#referral" data-tab="referral" class="nav-link px-3 py-2 rounded-md transition text-slate-400 hover:text-white">Referral Hub</a>
+          <a href="#leaderboard" data-tab="leaderboard" class="nav-link px-3 py-2 rounded-md transition text-slate-400 hover:text-white">Leaderboard</a>
+          
+          <div class="h-4 w-[1px] bg-slate-800 mx-1"></div>
+          
+          <!-- Admin Tools -->
+          <a href="#campaign" data-tab="campaign" class="nav-link px-3 py-2 rounded-md transition text-slate-400 hover:text-white flex items-center gap-1">
+            <i data-lucide="bar-chart-2" class="w-3.5 h-3.5 text-blue-400"></i> Dashboard
+          </a>
+          <a href="#funnel" data-tab="funnel" class="nav-link px-3 py-2 rounded-md transition text-slate-400 hover:text-white">Funnel & Model</a>
+          <a href="#plan" data-tab="plan" class="nav-link px-3 py-2 rounded-md transition text-slate-400 hover:text-white">7-Day Plan</a>
+          <a href="#outreach" data-tab="outreach" class="nav-link px-3 py-2 rounded-md transition text-slate-400 hover:text-white">Outreach</a>
+          <a href="#budget" data-tab="budget" class="nav-link px-3 py-2 rounded-md transition text-slate-400 hover:text-white">Budget</a>
+        </nav>
+
+        <!-- CTA & Role Toggle -->
+        <div class="hidden sm:flex items-center gap-3">
+          <div class="bg-slate-900 border border-slate-800 p-0.5 rounded-lg flex text-xs">
+            <button data-role="student" class="px-2.5 py-1 rounded-md text-xs font-semibold bg-blue-600 text-white transition">Student</button>
+            <button data-role="admin" class="px-2.5 py-1 rounded-md text-xs font-semibold text-slate-400 hover:text-white transition">Admin</button>
+          </div>
+          <a href="#register" data-nav="register" class="bg-gradient-to-r from-blue-600 to-cyan-500 hover:from-blue-500 hover:to-cyan-400 text-white font-bold px-3.5 py-1.5 rounded-lg text-xs transition shadow-md shadow-blue-500/20 flex items-center gap-1.5">
+            Register Free
+            <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
+          </a>
+        </div>
+
+        <!-- Mobile Menu Button -->
+        <div class="md:hidden flex items-center gap-2">
+          <button id="mobile-menu-btn" class="text-slate-400 hover:text-white p-2 rounded-lg bg-slate-900 border border-slate-800">
+            <i data-lucide="menu" class="w-5 h-5"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Mobile Drawer Menu -->
+    <div id="mobile-menu" class="md:hidden hidden bg-slate-950 border-b border-slate-800 px-4 pt-3 pb-5 space-y-2 text-sm">
+      <div class="pb-2 border-b border-slate-800/80 flex items-center justify-between text-xs text-slate-400">
+        <span>Current Registrations: <strong class="text-emerald-400">438 / 500</strong></span>
+        <span class="text-cyan-400">Budget: ₹2,000</span>
+      </div>
+      <a href="#home" data-nav="home" class="block py-1.5 text-slate-200">1. Home & Workshop Details</a>
+      <a href="#register" data-nav="register" class="block py-1.5 text-blue-400 font-semibold">2. Register Free (Seat Booking)</a>
+      <a href="#referral" data-nav="referral" class="block py-1.5 text-slate-200">3. Student Referral Dashboard</a>
+      <a href="#leaderboard" data-nav="leaderboard" class="block py-1.5 text-slate-200">4. Live Leaderboard (Top 10)</a>
+      <div class="pt-2 border-t border-slate-800 text-xs text-slate-400 font-bold uppercase tracking-wider">Growth Lead / Admin Views</div>
+      <a href="#campaign" data-nav="campaign" class="block py-1.5 text-slate-200">5. Campaign Dashboard & Charts</a>
+      <a href="#funnel" data-nav="funnel" class="block py-1.5 text-slate-200">6. 500 Funnel & Assumptions</a>
+      <a href="#plan" data-nav="plan" class="block py-1.5 text-slate-200">7. 7-Day Campaign Plan</a>
+      <a href="#outreach" data-nav="outreach" class="block py-1.5 text-slate-200">8. College Outreach Tracker</a>
+      <a href="#budget" data-nav="budget" class="block py-1.5 text-slate-200">9. ₹2,000 Budget Calculator</a>
+    </div>
+  </header>
+
+  <!-- MAIN BODY CONTAINER -->
+  <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6">
+
+    <!-- ========================================== -->
+    <!-- VIEW 1: LANDING PAGE (#view-home) -->
+    <!-- ========================================== -->
+    <section id="view-home" class="view-section space-y-16">
+      
+      <!-- HERO SECTION -->
+      <div class="relative py-12 md:py-20 text-center space-y-6 max-w-4xl mx-auto">
+        <!-- Floating Ambient Light -->
+        <div class="absolute inset-0 -top-24 bg-gradient-to-b from-blue-600/10 via-cyan-500/5 to-transparent blur-3xl pointer-events-none -z-10"></div>
+        
+        <!-- Live Alert Badge -->
+        <div class="inline-flex items-center gap-2 bg-blue-950/60 border border-blue-500/30 px-3.5 py-1.5 rounded-full text-xs font-medium text-blue-300">
+          <span class="w-2 h-2 rounded-full bg-cyan-400 animate-pulse"></span>
+          <span>Saturday 6:00 PM IST • Free Online Hands-on Workshop • Capped at 500 Seats</span>
+        </div>
+
+        <!-- Main Headline -->
+        <h1 class="text-4xl sm:text-5xl md:text-6xl font-extrabold text-white tracking-tight leading-tight">
+          Build Your First AI Project in <span class="text-gradient-blue">60 Minutes</span>
+        </h1>
+
+        <!-- Subheading -->
+        <p class="text-base sm:text-lg md:text-xl text-slate-300 max-w-2xl mx-auto leading-relaxed">
+          Students can build their first AI project in one 60-minute workshop. A zero-fluff, hands-on masterclass where final-year engineering students build and deploy a real-world AI application from scratch — ready for your resume & campus interviews.
+        </p>
+
+        <!-- CTA Group -->
+        <div class="flex flex-col sm:flex-row items-center justify-center gap-4 pt-4">
+          <a href="#register" data-nav="register" class="w-full sm:w-auto bg-gradient-to-r from-blue-600 to-cyan-500 hover:from-blue-500 hover:to-cyan-400 text-white font-bold text-base px-8 py-3.5 rounded-xl shadow-lg shadow-blue-500/25 transition transform hover:-translate-y-0.5 flex items-center justify-center gap-2">
+            <span>Register Free (Instant Access)</span>
+            <i data-lucide="arrow-right" class="w-4 h-4"></i>
+          </a>
+          <a href="#plan" data-nav="plan" class="w-full sm:w-auto bg-slate-900/90 hover:bg-slate-800 text-slate-200 border border-slate-700/80 font-semibold text-base px-6 py-3.5 rounded-xl transition flex items-center justify-center gap-2">
+            <i data-lucide="clock" class="w-4 h-4 text-blue-400"></i>
+            <span>View 60-Minute Timeline</span>
+          </a>
+        </div>
+
+        <!-- Trust Badges -->
+        <div class="pt-6 grid grid-cols-2 sm:grid-cols-4 gap-3 max-w-3xl mx-auto text-xs text-slate-400">
+          <div class="bg-slate-900/40 p-2.5 rounded-lg border border-slate-800/80 flex items-center justify-center gap-2">
+            <i data-lucide="cpu" class="w-4 h-4 text-emerald-400 shrink-0"></i>
+            <span>Zero GPU Needed</span>
+          </div>
+          <div class="bg-slate-900/40 p-2.5 rounded-lg border border-slate-800/80 flex items-center justify-center gap-2">
+            <i data-lucide="award" class="w-4 h-4 text-blue-400 shrink-0"></i>
+            <span>Verified Certificate</span>
+          </div>
+          <div class="bg-slate-900/40 p-2.5 rounded-lg border border-slate-800/80 flex items-center justify-center gap-2">
+            <i data-lucide="github" class="w-4 h-4 text-purple-400 shrink-0"></i>
+            <span>GitHub & Live URL</span>
+          </div>
+          <div class="bg-slate-900/40 p-2.5 rounded-lg border border-slate-800/80 flex items-center justify-center gap-2">
+            <i data-lucide="briefcase" class="w-4 h-4 text-amber-400 shrink-0"></i>
+            <span>Final-Year Placement Prep</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- WORKSHOP BENEFITS SECTION -->
+      <div class="space-y-8">
+        <div class="text-center max-w-2xl mx-auto">
+          <span class="text-xs font-bold text-blue-400 uppercase tracking-widest">Why Final-Year Engineers Attend</span>
+          <h2 class="text-2xl sm:text-3xl font-bold text-white mt-1">Transform Placement Panic Into An Unfair Advantage</h2>
+          <p class="text-sm text-slate-400 mt-2">Campus recruiters are tired of seeing generic CRUD projects. Here is how 60 minutes changes your resume.</p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div class="bg-slate-900/50 p-6 rounded-2xl border border-slate-800 hover:border-blue-500/40 transition">
+            <div class="w-12 h-12 rounded-xl bg-blue-600/20 text-blue-400 flex items-center justify-center mb-4 border border-blue-500/30">
+              <i data-lucide="file-code" class="w-6 h-6"></i>
+            </div>
+            <h3 class="text-lg font-bold text-white mb-2">Build a Working AI Application</h3>
+            <p class="text-sm text-slate-400 leading-relaxed">
+              No theoretical slideshows. You will connect to real OpenAI / Claude APIs, write prompt chains, and deploy a functioning full-stack web app on the cloud.
+            </p>
+          </div>
+
+          <div class="bg-slate-900/50 p-6 rounded-2xl border border-slate-800 hover:border-emerald-500/40 transition">
+            <div class="w-12 h-12 rounded-xl bg-emerald-600/20 text-emerald-400 flex items-center justify-center mb-4 border border-emerald-500/30">
+              <i data-lucide="sparkles" class="w-6 h-6"></i>
+            </div>
+            <h3 class="text-lg font-bold text-white mb-2">Ace "Explain Your AI Project" Questions</h3>
+            <p class="text-sm text-slate-400 leading-relaxed">
+              Learn the exact architecture diagrams and talking points that senior interviewers expect when asking about prompt design, hallucinations, and API tokens.
+            </p>
+          </div>
+
+          <div class="bg-slate-900/50 p-6 rounded-2xl border border-slate-800 hover:border-cyan-500/40 transition">
+            <div class="w-12 h-12 rounded-xl bg-cyan-600/20 text-cyan-400 flex items-center justify-center mb-4 border border-cyan-500/30">
+              <i data-lucide="share-2" class="w-6 h-6"></i>
+            </div>
+            <h3 class="text-lg font-bold text-white mb-2">Unlock Viral Peer Perks</h3>
+            <p class="text-sm text-slate-400 leading-relaxed">
+              Invite your hostel and project mates. Unlock verified certificates, AI project boilerplate packs, and exclusive 1-on-1 mentorship sessions as you climb the ranks.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- WHAT STUDENTS WILL LEARN / BUILD SECTION (With Interactive Mini-Demo) -->
+      <div class="bg-gradient-to-b from-slate-900/90 to-slate-950 p-6 sm:p-8 rounded-3xl border border-slate-800 space-y-6">
+        <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-6 border-b border-slate-800">
+          <div>
+            <span class="text-xs font-bold text-cyan-400 uppercase tracking-widest">Hands-on Capstone Deliverable</span>
+            <h2 class="text-2xl sm:text-3xl font-bold text-white mt-1">What You Will Build: AI Resume Screener & Coach</h2>
+            <p class="text-sm text-slate-400 mt-1">An intelligent web app that compares applicant resumes to job postings, calculates ATS match scores, and generates custom interview questions.</p>
+          </div>
+          <div class="flex flex-wrap gap-2 text-xs font-mono">
+            <span class="bg-blue-950 text-blue-300 px-3 py-1 rounded-md border border-blue-800">Python 3.10</span>
+            <span class="bg-emerald-950 text-emerald-300 px-3 py-1 rounded-md border border-emerald-800">OpenAI API</span>
+            <span class="bg-purple-950 text-purple-300 px-3 py-1 rounded-md border border-purple-800">LangChain</span>
+            <span class="bg-amber-950 text-amber-300 px-3 py-1 rounded-md border border-amber-800">Streamlit UI</span>
+          </div>
+        </div>
+
+        <!-- Interactive Sandbox Simulation -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 items-center">
+          <div class="space-y-4">
+            <h3 class="text-lg font-bold text-white">Live Prototype Preview (What You'll Code)</h3>
+            <p class="text-sm text-slate-300 leading-relaxed">
+              During the 60 minutes, our instructor guides you line-by-line in a zero-configuration cloud IDE. You'll write the API orchestrator, extract resume keywords, and format structured JSON responses.
+            </p>
+            <div class="space-y-2 text-xs text-slate-300">
+              <div class="flex items-center gap-2">
+                <i data-lucide="check" class="w-4 h-4 text-emerald-400"></i>
+                <span>Parse candidate resume PDF / text against tech role expectations</span>
+              </div>
+              <div class="flex items-center gap-2">
+                <i data-lucide="check" class="w-4 h-4 text-emerald-400"></i>
+                <span>Run temperature-controlled LLM prompt chains for deterministic scoring</span>
+              </div>
+              <div class="flex items-center gap-2">
+                <i data-lucide="check" class="w-4 h-4 text-emerald-400"></i>
+                <span>Deploy with a live shareable URL to include on your LinkedIn & resume</span>
+              </div>
+            </div>
+            <div>
+              <button id="demo-test-ai-btn" class="bg-slate-800 hover:bg-slate-700 text-blue-400 hover:text-blue-300 border border-slate-700 text-xs font-semibold px-4 py-2 rounded-lg transition flex items-center gap-2">
+                <i data-lucide="play" class="w-3.5 h-3.5"></i> Test Simulated AI Screener Output
+              </button>
+            </div>
+          </div>
+
+          <!-- Terminal Output Simulation Window -->
+          <div class="terminal-window">
+            <div class="terminal-header">
+              <div class="terminal-dot bg-red-500/80"></div>
+              <div class="terminal-dot bg-amber-500/80"></div>
+              <div class="terminal-dot bg-emerald-500/80"></div>
+              <span class="text-[11px] font-mono text-slate-400 ml-2">ai_resume_screener.py • Streamlit Live Preview</span>
+            </div>
+            <div class="p-4 space-y-3 font-mono text-xs">
+              <div class="text-slate-400">$ python app.py --port=8501</div>
+              <div class="text-emerald-400">✓ Connected to Cloud LLM Inference Endpoint</div>
+              <div class="text-blue-400">✓ Streamlit web application running at http://localhost:8501</div>
+              
+              <!-- Dynamic output box -->
+              <div id="demo-ai-output" class="hidden pt-2 border-t border-slate-800">
+                <!-- Injected via JavaScript -->
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- WHO SHOULD ATTEND SECTION -->
+      <div class="space-y-6">
+        <div class="text-center max-w-2xl mx-auto">
+          <span class="text-xs font-bold text-emerald-400 uppercase tracking-widest">Eligibility & Target Audience</span>
+          <h2 class="text-2xl sm:text-3xl font-bold text-white mt-1">Who Should Attend This Free Workshop?</h2>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+          <div class="bg-slate-900/60 p-5 rounded-xl border border-slate-800">
+            <div class="text-blue-400 mb-2 font-bold flex items-center gap-2">
+              <i data-lucide="graduation-cap" class="w-5 h-5"></i> Final-Year CSE / IT
+            </div>
+            <p class="text-xs text-slate-400 leading-relaxed">
+              Looking to upgrade from outdated college projects to cutting-edge GenAI portfolio work ahead of campus placement drives.
+            </p>
+          </div>
+
+          <div class="bg-slate-900/60 p-5 rounded-xl border border-slate-800">
+            <div class="text-cyan-400 mb-2 font-bold flex items-center gap-2">
+              <i data-lucide="refresh-cw" class="w-5 h-5"></i> ECE, EEE & Core Branches
+            </div>
+            <p class="text-xs text-slate-400 leading-relaxed">
+              Engineering students who want to break into high-paying software and AI roles with proof of hands-on coding ability.
+            </p>
+          </div>
+
+          <div class="bg-slate-900/60 p-5 rounded-xl border border-slate-800">
+            <div class="text-purple-400 mb-2 font-bold flex items-center gap-2">
+              <i data-lucide="layers" class="w-5 h-5"></i> Final-Year Capstone Preppers
+            </div>
+            <p class="text-xs text-slate-400 leading-relaxed">
+              Need inspiration or a working modular prototype for final-year major engineering project submissions.
+            </p>
+          </div>
+
+          <div class="bg-slate-900/60 p-5 rounded-xl border border-slate-800">
+            <div class="text-amber-400 mb-2 font-bold flex items-center gap-2">
+              <i data-lucide="users" class="w-5 h-5"></i> Student Campus Ambassadors
+            </div>
+            <p class="text-xs text-slate-400 leading-relaxed">
+              Tech community leaders and club leads looking to bring valuable industry-grade workshops to their college batches.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- 60-MINUTE WORKSHOP TIMELINE -->
+      <div class="space-y-6">
+        <div class="text-center max-w-2xl mx-auto">
+          <span class="text-xs font-bold text-blue-400 uppercase tracking-widest">Minute-by-Minute Breakdown</span>
+          <h2 class="text-2xl sm:text-3xl font-bold text-white mt-1">Every Minute Accounted For</h2>
+          <p class="text-sm text-slate-400 mt-1">Strict 60-minute agenda designed for maximum hands-on build efficiency.</p>
+        </div>
+
+        <div id="timeline-list" class="max-w-3xl mx-auto space-y-4 pt-4">
+          <!-- Dynamically populated from data.js -->
+        </div>
+      </div>
+
+      <!-- ALUMNI SOCIAL PROOF / TESTIMONIALS -->
+      <div class="space-y-6">
+        <div class="text-center max-w-2xl mx-auto">
+          <span class="text-xs font-bold text-amber-400 uppercase tracking-widest">Proven Student Outcomes</span>
+          <h2 class="text-2xl sm:text-3xl font-bold text-white mt-1">What Final-Year Engineers Say</h2>
+        </div>
+
+        <div id="testimonials-grid" class="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <!-- Dynamically populated -->
+        </div>
+      </div>
+
+      <!-- FAQS SECTION -->
+      <div class="space-y-6 max-w-3xl mx-auto">
+        <div class="text-center">
+          <span class="text-xs font-bold text-cyan-400 uppercase tracking-widest">Got Questions?</span>
+          <h2 class="text-2xl sm:text-3xl font-bold text-white mt-1">Frequently Asked Questions</h2>
+        </div>
+
+        <div id="faq-list" class="space-y-3">
+          <!-- Dynamically populated accordion -->
+        </div>
+      </div>
+
+      <!-- FINAL REGISTRATION CTA BANNER -->
+      <div class="bg-gradient-to-r from-blue-900/60 via-indigo-950/70 to-slate-900 p-8 sm:p-12 rounded-3xl border border-blue-500/40 text-center space-y-6 relative overflow-hidden">
+        <div class="max-w-2xl mx-auto space-y-3">
+          <div class="inline-block bg-blue-500/20 text-blue-300 font-mono text-xs px-3 py-1 rounded-full border border-blue-500/30">
+            🔥 Final 62 Seats Remaining For This Cohort
+          </div>
+          <h2 class="text-3xl sm:text-4xl font-extrabold text-white">Ready to Build Your First AI Project?</h2>
+          <p class="text-sm sm:text-base text-slate-300">
+            Join 430+ final-year engineering peers. 60 minutes, zero cost, verified certificate, and a live deployed AI application for your resume.
+          </p>
+        </div>
+
+        <div>
+          <a href="#register" data-nav="register" class="inline-flex items-center gap-2 bg-gradient-to-r from-blue-600 to-cyan-500 hover:from-blue-500 hover:to-cyan-400 text-white font-bold text-base px-8 py-3.5 rounded-xl shadow-xl shadow-blue-500/30 transition transform hover:-translate-y-0.5">
+            <span>Register Free Now (60 Seconds)</span>
+            <i data-lucide="arrow-right" class="w-5 h-5"></i>
+          </a>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- ========================================== -->
+    <!-- VIEW 2: REGISTRATION FORM (#view-register) -->
+    <!-- ========================================== -->
+    <section id="view-register" class="view-section hidden max-w-2xl mx-auto space-y-6 py-6">
+      
+      <div class="text-center space-y-2">
+        <span class="text-xs font-bold text-blue-400 uppercase tracking-widest">Free Student Registration</span>
+        <h2 class="text-3xl font-extrabold text-white">Reserve Your Cloud Lab Seat</h2>
+        <p class="text-sm text-slate-400">
+          Complete the form below to lock your spot and instantly generate your unique referral link to unlock milestone perks.
+        </p>
+      </div>
+
+      <div class="bg-slate-900/80 p-6 sm:p-8 rounded-3xl border border-slate-800 shadow-xl space-y-6">
+        
+        <div class="flex items-center justify-between pb-4 border-b border-slate-800">
+          <div class="flex items-center gap-2 text-xs text-slate-400">
+            <i data-lucide="lock" class="w-4 h-4 text-emerald-400"></i>
+            <span>100% Free • No Credit Card • Zero Fees</span>
+          </div>
+          <button id="quick-fill-reg-btn" type="button" class="text-xs bg-slate-800 hover:bg-slate-700 text-blue-400 hover:text-blue-300 px-3 py-1 rounded-md border border-slate-700 transition flex items-center gap-1.5 font-semibold">
+            <i data-lucide="wand-2" class="w-3.5 h-3.5"></i>
+            <span>Quick Demo Autofill</span>
+          </button>
+        </div>
+
+        <form id="workshop-registration-form" class="space-y-4">
+          <!-- Full Name -->
+          <div>
+            <label class="block text-xs font-semibold text-slate-300 mb-1.5" for="reg-name">Full Name <span class="text-red-400">*</span></label>
+            <input type="text" id="reg-name" required placeholder="e.g. Arun Kumar" class="w-full form-input px-3.5 py-2.5 rounded-xl text-sm">
+          </div>
+
+          <!-- Email & Phone in 2 Cols -->
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+              <label class="block text-xs font-semibold text-slate-300 mb-1.5" for="reg-email">Email Address <span class="text-red-400">*</span></label>
+              <input type="email" id="reg-email" required placeholder="arun.kumar@gmail.com" class="w-full form-input px-3.5 py-2.5 rounded-xl text-sm">
+            </div>
+            <div>
+              <label class="block text-xs font-semibold text-slate-300 mb-1.5" for="reg-phone">WhatsApp Number <span class="text-red-400">*</span></label>
+              <input type="tel" id="reg-phone" required placeholder="10-digit mobile (e.g. 9849012345)" class="w-full form-input px-3.5 py-2.5 rounded-xl text-sm">
+            </div>
+          </div>
+
+          <!-- College -->
+          <div>
+            <label class="block text-xs font-semibold text-slate-300 mb-1.5" for="reg-college">College / University <span class="text-red-400">*</span></label>
+            <input type="text" id="reg-college" required list="colleges-list" placeholder="e.g. JNTU Hyderabad, CBIT, SRM, VIT..." class="w-full form-input px-3.5 py-2.5 rounded-xl text-sm">
+            <datalist id="colleges-list">
+              <option value="JNTU Hyderabad (College of Engineering)"></option>
+              <option value="Chaitanya Bharathi Institute of Tech (CBIT)"></option>
+              <option value="VNR Vignana Jyothi Institute (VNR VJIET)"></option>
+              <option value="Vasavi College of Engineering"></option>
+              <option value="Osmania University (UCEOU)"></option>
+              <option value="Gokaraju Rangaraju Inst of Tech (GRIET)"></option>
+              <option value="SRM Institute of Science and Tech"></option>
+              <option value="VIT Vellore"></option>
+              <option value="Vardhaman College of Engineering"></option>
+              <option value="Anurag University"></option>
+            </datalist>
+          </div>
+
+          <!-- Branch & Grad Year -->
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+              <label class="block text-xs font-semibold text-slate-300 mb-1.5" for="reg-branch">Engineering Branch <span class="text-red-400">*</span></label>
+              <select id="reg-branch" required class="w-full form-input px-3.5 py-2.5 rounded-xl text-sm">
+                <option value="Computer Science & Engineering">Computer Science & Engineering (CSE)</option>
+                <option value="Information Technology">Information Technology (IT)</option>
+                <option value="AI & Machine Learning">AI & Machine Learning / Data Science</option>
+                <option value="Electronics & Communication">Electronics & Communication (ECE)</option>
+                <option value="Electrical & Electronics">Electrical & Electronics (EEE)</option>
+                <option value="Mechanical Engineering">Mechanical Engineering</option>
+                <option value="Civil Engineering">Civil Engineering</option>
+                <option value="Other Engineering Branch">Other Engineering Branch</option>
+              </select>
+            </div>
+            <div>
+              <label class="block text-xs font-semibold text-slate-300 mb-1.5" for="reg-year">Graduation Year <span class="text-red-400">*</span></label>
+              <select id="reg-year" required class="w-full form-input px-3.5 py-2.5 rounded-xl text-sm">
+                <option value="2025" selected>2025 (Final Year)</option>
+                <option value="2026">2026 (Pre-Final Year)</option>
+                <option value="2027">2027</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Optional Referral Code -->
+          <div>
+            <label class="block text-xs font-semibold text-slate-300 mb-1.5" for="reg-referral-code">Referral Code (Optional)</label>
+            <input type="text" id="reg-referral-code" placeholder="e.g. NXT-ARUN-742 (Auto-filled if using a friend's link)" class="w-full form-input px-3.5 py-2.5 rounded-xl text-sm font-mono uppercase">
+            <span class="text-[11px] text-slate-400 mt-1 block">Have a friend's code? Enter it to credit their milestone badge.</span>
+          </div>
+
+          <div class="pt-4">
+            <button type="submit" class="w-full bg-gradient-to-r from-blue-600 via-blue-500 to-cyan-500 hover:from-blue-500 hover:to-cyan-400 text-white font-bold py-3.5 px-6 rounded-xl transition shadow-lg shadow-blue-500/25 flex items-center justify-center gap-2 text-base">
+              <span>Complete Free Registration & Get Referral Link</span>
+              <i data-lucide="check-circle" class="w-5 h-5"></i>
+            </button>
+          </div>
+        </form>
+      </div>
+
+    </section>
+
+    <!-- REGISTRATION SUCCESS MODAL -->
+    <div id="success-modal" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4 hidden">
+      <div class="bg-slate-900 border border-slate-700 max-w-lg w-full rounded-3xl p-6 sm:p-8 space-y-6 shadow-2xl relative">
+        <div class="text-center space-y-2">
+          <div class="w-16 h-16 rounded-full bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 flex items-center justify-center mx-auto text-2xl">
+            🎉
+          </div>
+          <h3 class="text-2xl font-extrabold text-white">Seat Confirmed!</h3>
+          <p class="text-sm text-slate-300">
+            Congratulations <strong id="success-student-name" class="text-blue-400">Student</strong>, your cloud workspace is ready for Saturday 6:00 PM.
+          </p>
+        </div>
+
+        <div class="bg-slate-950 p-4 rounded-2xl border border-slate-800 space-y-3">
+          <div class="text-xs text-slate-400 font-semibold uppercase tracking-wider">Your Exclusive Referral Link</div>
+          <div id="success-ref-link" class="text-xs font-mono text-cyan-300 bg-slate-900 p-2.5 rounded-lg border border-slate-800 break-all select-all">
+            <!-- Injected -->
+          </div>
+          <div class="flex items-center justify-between text-xs text-slate-400">
+            <span>Referral Code: <strong id="success-ref-code" class="text-white font-mono">NXT-XXX</strong></span>
+            <button id="modal-copy-link-btn" class="text-blue-400 hover:text-blue-300 font-semibold flex items-center gap-1">
+              <i data-lucide="copy" class="w-3.5 h-3.5"></i> Copy Link
+            </button>
+          </div>
+        </div>
+
+        <div class="pt-2">
+          <button id="modal-go-dashboard-btn" class="w-full bg-blue-600 hover:bg-blue-500 text-white font-bold py-3 px-6 rounded-xl transition flex items-center justify-center gap-2">
+            <span>Open My Referral Hub & Milestone Rewards</span>
+            <i data-lucide="arrow-right" class="w-4 h-4"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ========================================== -->
+    <!-- VIEW 3: STUDENT REFERRAL DASHBOARD (#view-referral) -->
+    <!-- ========================================== -->
+    <section id="view-referral" class="view-section hidden space-y-8 py-4">
+      
+      <!-- Empty state if no user registered -->
+      <div id="referral-empty-state" class="text-center py-16 bg-slate-900/40 rounded-3xl border border-slate-800 space-y-4">
+        <i data-lucide="user-x" class="w-12 h-12 text-slate-500 mx-auto"></i>
+        <h3 class="text-xl font-bold text-white">No Registered Student Active</h3>
+        <p class="text-sm text-slate-400 max-w-md mx-auto">
+          Register for the workshop or use "Quick Demo Autofill" on the registration page to preview the student referral hub.
+        </p>
+        <a href="#register" data-nav="register" class="inline-flex items-center gap-2 bg-blue-600 hover:bg-blue-500 text-white font-bold px-5 py-2.5 rounded-xl text-sm">
+          Go to Registration
+        </a>
+      </div>
+
+      <div id="referral-content" class="space-y-8">
+        
+        <!-- Welcome Card -->
+        <div class="bg-gradient-to-r from-blue-950/60 via-slate-900 to-slate-950 p-6 sm:p-8 rounded-3xl border border-blue-500/30 flex flex-col md:flex-row md:items-center justify-between gap-6">
+          <div class="space-y-1">
+            <div class="flex items-center gap-2">
+              <span class="text-xs font-bold text-cyan-400 uppercase tracking-widest">Student Referral Hub</span>
+              <span id="ref-current-milestone-badge" class="bg-blue-500/20 text-blue-300 text-xs px-2.5 py-0.5 rounded-full border border-blue-500/30 font-semibold">
+                AI Starter
+              </span>
+            </div>
+            <h2 class="text-2xl sm:text-3xl font-extrabold text-white">Hey <span id="ref-student-name">Arun Kumar</span> 👋</h2>
+            <p id="ref-student-college" class="text-xs sm:text-sm text-slate-400">
+              JNTU Hyderabad • Computer Science ('25)
+            </p>
+          </div>
+
+          <!-- Quick Interactive Simulation for Interviewers -->
+          <div class="bg-slate-900/90 p-4 rounded-2xl border border-slate-800 space-y-2 shrink-0">
+            <div class="text-[11px] font-semibold text-amber-400 flex items-center gap-1.5">
+              <i data-lucide="zap" class="w-3.5 h-3.5"></i> Interview Demo Controls:
+            </div>
+            <div class="flex items-center gap-2">
+              <button id="sim-add-one-ref-btn" class="bg-blue-600/80 hover:bg-blue-600 text-white text-xs font-semibold px-3 py-1.5 rounded-lg border border-blue-400/40 transition flex items-center gap-1">
+                +1 Referral
+              </button>
+              <button id="sim-add-three-ref-btn" class="bg-emerald-600/80 hover:bg-emerald-600 text-white text-xs font-semibold px-3 py-1.5 rounded-lg border border-emerald-400/40 transition flex items-center gap-1">
+                +3 Referrals
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- 3 KPI Cards -->
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-6">
+          <div class="bg-slate-900/60 p-6 rounded-2xl border border-slate-800">
+            <span class="text-xs text-slate-400 font-semibold uppercase tracking-wider">Total Referrals Generated</span>
+            <div id="ref-total-count" class="text-3xl sm:text-4xl font-extrabold text-white mt-2">2</div>
+            <div class="text-xs text-emerald-400 mt-1 flex items-center gap-1">
+              <i data-lucide="check" class="w-3.5 h-3.5"></i> Live verified batchmates
+            </div>
+          </div>
+
+          <div class="bg-slate-900/60 p-6 rounded-2xl border border-slate-800">
+            <span class="text-xs text-slate-400 font-semibold uppercase tracking-wider">Current Referral Rank</span>
+            <div id="ref-current-rank" class="text-3xl sm:text-4xl font-extrabold text-cyan-400 mt-2">#11</div>
+            <div class="text-xs text-slate-400 mt-1">Among 438 registered students</div>
+          </div>
+
+          <div class="bg-slate-900/60 p-6 rounded-2xl border border-slate-800">
+            <span class="text-xs text-slate-400 font-semibold uppercase tracking-wider">Progress to Next Tier</span>
+            <div id="milestone-percent-text" class="text-3xl sm:text-4xl font-extrabold text-blue-400 mt-2">66%</div>
+            <div id="ref-next-milestone-text" class="text-xs text-slate-300 mt-1 truncate">
+              Refer 1 more friend to unlock "AI Builder"
+            </div>
+          </div>
+        </div>
+
+        <!-- Referral Link & Sharing Tools -->
+        <div class="bg-slate-900/80 p-6 sm:p-8 rounded-3xl border border-slate-800 space-y-6">
+          <h3 class="text-lg font-bold text-white">Your Unique Referral Link & Share Tools</h3>
+          
+          <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
+            <!-- Link Box -->
+            <div class="space-y-2">
+              <label class="text-xs font-semibold text-slate-400">Shareable URL</label>
+              <div class="flex items-center gap-2">
+                <div id="ref-unique-link" class="flex-1 bg-slate-950 px-3.5 py-2.5 rounded-xl border border-slate-800 text-xs font-mono text-cyan-300 truncate">
+                  <!-- Injected -->
+                </div>
+                <button id="copy-ref-link-btn" class="bg-blue-600 hover:bg-blue-500 text-white font-semibold text-xs px-4 py-2.5 rounded-xl transition flex items-center gap-1.5 shrink-0">
+                  <i data-lucide="copy" class="w-3.5 h-3.5"></i> Copy Link
+                </button>
+              </div>
+            </div>
+
+            <!-- Code Box -->
+            <div class="space-y-2">
+              <label class="text-xs font-semibold text-slate-400">Your Referral Code</label>
+              <div class="flex items-center gap-2">
+                <div id="ref-unique-code" class="flex-1 bg-slate-950 px-3.5 py-2.5 rounded-xl border border-slate-800 text-xs font-mono font-bold text-white">
+                  <!-- Injected -->
+                </div>
+                <button id="share-whatsapp-btn" class="bg-emerald-600 hover:bg-emerald-500 text-white font-semibold text-xs px-4 py-2.5 rounded-xl transition flex items-center gap-1.5 shrink-0 shadow-md shadow-emerald-600/20">
+                  <i data-lucide="share" class="w-3.5 h-3.5"></i> Share on WhatsApp
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- WhatsApp Message Preview Box -->
+          <div class="bg-slate-950 p-5 rounded-2xl border border-slate-800 space-y-3">
+            <div class="flex items-center justify-between">
+              <span class="text-xs font-semibold text-slate-400 flex items-center gap-1.5">
+                <i data-lucide="message-square" class="w-3.5 h-3.5 text-emerald-400"></i> Pre-Crafted WhatsApp Message Template
+              </span>
+              <button id="copy-whatsapp-msg-btn" class="text-xs text-blue-400 hover:text-blue-300 font-semibold flex items-center gap-1">
+                <i data-lucide="copy" class="w-3 h-3"></i> Copy Message
+              </button>
+            </div>
+            <div class="bg-slate-900/90 p-3.5 rounded-xl border border-slate-800/80 font-sans text-xs text-slate-300 leading-relaxed whitespace-pre-line">
+“I just registered for a FREE workshop — Build Your First AI Project in 60 Minutes 🚀
+
+If you're a final-year engineering student and want to build an AI project, register here:
+
+<span class="text-cyan-400">[YOUR UNIQUE REFERRAL LINK]</span>”
+            </div>
+          </div>
+        </div>
+
+        <!-- REFERRAL GAMIFICATION & MILESTONES -->
+        <div class="bg-slate-900/60 p-6 sm:p-8 rounded-3xl border border-slate-800 space-y-6">
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+            <div>
+              <span class="text-xs font-bold text-blue-400 uppercase tracking-widest">Referral Gamification</span>
+              <h3 class="text-xl font-bold text-white mt-1">Unlock Exclusive AI Project Perks</h3>
+            </div>
+            <span class="text-xs text-slate-400">5 Milestones to AI Champion</span>
+          </div>
+
+          <!-- Dynamic Progress Bar -->
+          <div class="space-y-2">
+            <div class="w-full bg-slate-950 h-3 rounded-full overflow-hidden border border-slate-800">
+              <div id="milestone-progress-bar" class="h-full bg-gradient-to-r from-blue-600 via-cyan-500 to-emerald-400 transition-all duration-500" style="width: 40%"></div>
+            </div>
+          </div>
+
+          <!-- Milestones Cards Grid -->
+          <div id="milestones-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
+            <!-- Injected via JavaScript from data.js -->
+          </div>
+        </div>
+
+      </div>
+
+    </section>
+
+    <!-- ========================================== -->
+    <!-- VIEW 4: LEADERBOARD (#view-leaderboard) -->
+    <!-- ========================================== -->
+    <section id="view-leaderboard" class="view-section hidden space-y-6 py-4">
+      
+      <!-- DEMO DATA BADGE BANNER -->
+      <div class="bg-amber-950/40 border border-amber-500/40 p-4 rounded-2xl flex items-center justify-between text-xs text-amber-200">
+        <div class="flex items-center gap-2">
+          <i data-lucide="info" class="w-4 h-4 text-amber-400 shrink-0"></i>
+          <span><strong>DEMO DATA:</strong> Fictional demo names used for evaluation prototype. Labeled for recruitment review.</span>
+        </div>
+        <div class="text-slate-400">
+          Total Referrals Tracked: <strong id="leaderboard-total-referrals" class="text-white font-mono">148</strong>
+        </div>
+      </div>
+
+      <!-- Leaderboard Header & Description -->
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div>
+          <h2 class="text-2xl sm:text-3xl font-extrabold text-white">Campus Referral Leaderboard</h2>
+          <p class="text-sm text-slate-400 mt-1">Top student referrers across participating engineering colleges.</p>
+        </div>
+      </div>
+
+      <!-- Leaderboard Table -->
+      <div class="bg-slate-900/80 rounded-2xl border border-slate-800 overflow-hidden shadow-xl">
+        <div class="overflow-x-auto">
+          <table class="w-full text-left custom-table">
+            <thead>
+              <tr>
+                <th class="w-16 text-center">Rank</th>
+                <th>Student</th>
+                <th>College & Branch</th>
+                <th class="text-center">Referrals</th>
+                <th>Current Tier</th>
+              </tr>
+            </thead>
+            <tbody id="leaderboard-body">
+              <!-- Dynamically populated -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- User Sticky Position Card -->
+      <div id="leaderboard-user-sticky" class="hidden bg-blue-950/60 p-4 rounded-xl border border-blue-500/40 flex items-center justify-between text-xs">
+        <div class="flex items-center gap-3">
+          <span class="text-xs bg-blue-600 text-white font-bold px-2 py-1 rounded">YOUR RANK: <span id="user-sticky-rank">#11</span></span>
+          <span class="text-white font-bold" id="user-sticky-name">Arun Kumar</span>
+          <span class="text-slate-400">• <span id="user-sticky-referrals">2</span> Referrals Generated</span>
+        </div>
+        <div class="text-cyan-400 font-semibold" id="user-sticky-badge">
+          Active Referrer
+        </div>
+      </div>
+
+    </section>
+
+    <!-- ========================================== -->
+    <!-- VIEW 5: CAMPAIGN / ADMIN DASHBOARD (#view-campaign) -->
+    <!-- ========================================== -->
+    <section id="view-campaign" class="view-section hidden space-y-8 py-4">
+      
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-2 border-b border-slate-800">
+        <div>
+          <span class="text-xs font-bold text-blue-400 uppercase tracking-widest">Growth Lead / Campaign Manager View</span>
+          <h2 class="text-2xl sm:text-3xl font-extrabold text-white mt-1">Campaign Analytics & KPI Dashboard</h2>
+        </div>
+        <div class="text-xs bg-slate-900 px-3 py-1.5 rounded-lg border border-slate-800 text-slate-300">
+          Target Goal: <strong class="text-white">500 Final-Year Engineers</strong>
+        </div>
+      </div>
+
+      <!-- Top Metric Cards Grid -->
+      <div class="grid grid-cols-2 sm:grid-cols-4 gap-4">
+        <!-- Target -->
+        <div class="bg-slate-900/60 p-5 rounded-2xl border border-slate-800">
+          <span class="text-xs text-slate-400 font-semibold uppercase">Target Registrations</span>
+          <div id="dash-target" class="text-2xl sm:text-3xl font-extrabold text-white mt-1">500</div>
+          <div class="text-[11px] text-slate-500 mt-1">Campaign Goal</div>
+        </div>
+
+        <!-- Current -->
+        <div class="bg-slate-900/60 p-5 rounded-2xl border border-slate-800">
+          <span class="text-xs text-slate-400 font-semibold uppercase">Current Registrations</span>
+          <div id="dash-current" class="text-2xl sm:text-3xl font-extrabold text-emerald-400 mt-1">438</div>
+          <div class="text-[11px] text-emerald-400/80 mt-1 flex items-center gap-1">
+            <span id="dash-progress-percent">87.6%</span> achieved
+          </div>
+        </div>
+
+        <!-- Remaining -->
+        <div class="bg-slate-900/60 p-5 rounded-2xl border border-slate-800">
+          <span class="text-xs text-slate-400 font-semibold uppercase">Remaining Seats</span>
+          <div id="dash-remaining" class="text-2xl sm:text-3xl font-extrabold text-amber-400 mt-1">62</div>
+          <div class="text-[11px] text-slate-500 mt-1">To reach 500 cap</div>
+        </div>
+
+        <!-- Cost per Registration -->
+        <div class="bg-slate-900/60 p-5 rounded-2xl border border-slate-800">
+          <span class="text-xs text-slate-400 font-semibold uppercase">Cost Per Reg (CAC)</span>
+          <div id="dash-cost-per-reg" class="text-2xl sm:text-3xl font-extrabold text-cyan-400 mt-1">₹4.57</div>
+          <div class="text-[11px] text-cyan-500/80 mt-1">From ₹2,000 Budget</div>
+        </div>
+      </div>
+
+      <!-- Secondary Metrics Strip -->
+      <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 bg-slate-900/40 p-4 rounded-2xl border border-slate-800 text-xs">
+        <div>
+          <span class="text-slate-400">Direct Outreach:</span>
+          <div id="dash-direct-regs" class="text-base font-bold text-white mt-0.5">285</div>
+        </div>
+        <div>
+          <span class="text-slate-400">Referral Driven:</span>
+          <div id="dash-referral-regs" class="text-base font-bold text-emerald-400 mt-0.5">153</div>
+        </div>
+        <div>
+          <span class="text-slate-400">Active Referrers:</span>
+          <div id="dash-active-referrers" class="text-base font-bold text-blue-400 mt-0.5">86 students</div>
+        </div>
+        <div>
+          <span class="text-slate-400">Avg Referrals / Student:</span>
+          <div id="dash-avg-referrals" class="text-base font-bold text-purple-400 mt-0.5">1.78</div>
+        </div>
+      </div>
+
+      <!-- Overall Progress Bar Card -->
+      <div class="bg-slate-900/60 p-5 rounded-2xl border border-slate-800 space-y-2">
+        <div class="flex justify-between text-xs font-semibold text-slate-300">
+          <span>Overall Progress toward 500 Goal</span>
+          <span class="text-emerald-400 font-mono">438 / 500 (87.6%)</span>
+        </div>
+        <div class="w-full bg-slate-950 h-3 rounded-full overflow-hidden border border-slate-800">
+          <div id="dash-progress-bar" class="h-full bg-gradient-to-r from-blue-600 via-cyan-500 to-emerald-400 transition-all duration-500" style="width: 87.6%"></div>
+        </div>
+      </div>
+
+      <!-- 4 Visual Charts Grid -->
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        
+        <!-- Chart 1: 7-Day Cumulative vs Target Line & Daily Bar -->
+        <div class="bg-slate-900/80 p-5 rounded-2xl border border-slate-800 space-y-4">
+          <div class="flex items-center justify-between">
+            <h3 class="text-sm font-bold text-white flex items-center gap-2">
+              <i data-lucide="trending-up" class="w-4 h-4 text-blue-400"></i> Registrations Over 7 Days
+            </h3>
+            <span class="text-[11px] text-slate-400">Cumulative vs Daily</span>
+          </div>
+          <div class="h-64 relative">
+            <canvas id="chart-7day-registrations"></canvas>
+          </div>
+        </div>
+
+        <!-- Chart 2: Direct vs Referral Share -->
+        <div class="bg-slate-900/80 p-5 rounded-2xl border border-slate-800 space-y-4">
+          <div class="flex items-center justify-between">
+            <h3 class="text-sm font-bold text-white flex items-center gap-2">
+              <i data-lucide="pie-chart" class="w-4 h-4 text-emerald-400"></i> Direct vs Referral Share
+            </h3>
+            <span class="text-[11px] text-slate-400">Acquisition Channel Split</span>
+          </div>
+          <div class="h-64 relative flex items-center justify-center">
+            <canvas id="chart-direct-vs-referral"></canvas>
+          </div>
+        </div>
+
+        <!-- Chart 3: Registrations by College -->
+        <div class="bg-slate-900/80 p-5 rounded-2xl border border-slate-800 space-y-4">
+          <div class="flex items-center justify-between">
+            <h3 class="text-sm font-bold text-white flex items-center gap-2">
+              <i data-lucide="building" class="w-4 h-4 text-cyan-400"></i> Registrations by College
+            </h3>
+            <span class="text-[11px] text-slate-400">Top Performing Colleges</span>
+          </div>
+          <div class="h-64 relative">
+            <canvas id="chart-colleges"></canvas>
+          </div>
+        </div>
+
+        <!-- Chart 4: Referral Milestone Distribution -->
+        <div class="bg-slate-900/80 p-5 rounded-2xl border border-slate-800 space-y-4">
+          <div class="flex items-center justify-between">
+            <h3 class="text-sm font-bold text-white flex items-center gap-2">
+              <i data-lucide="award" class="w-4 h-4 text-purple-400"></i> Referral Gamification Tiers
+            </h3>
+            <span class="text-[11px] text-slate-400">Students in Milestones</span>
+          </div>
+          <div class="h-64 relative">
+            <canvas id="chart-tiers"></canvas>
+          </div>
+        </div>
+
+      </div>
+
+    </section>
+
+    <!-- ========================================== -->
+    <!-- VIEW 6: 500 FUNNEL & EDITABLE ASSUMPTIONS (#view-funnel) -->
+    <!-- ========================================== -->
+    <section id="view-funnel" class="view-section hidden space-y-8 py-4">
+      
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-2 border-b border-slate-800">
+        <div>
+          <span class="text-xs font-bold text-cyan-400 uppercase tracking-widest">Mathematical Growth Model</span>
+          <h2 class="text-2xl sm:text-3xl font-extrabold text-white mt-1">500-Registration Funnel & Editable Assumptions</h2>
+          <p class="text-sm text-slate-400">
+            Adjust the conversion rates and community metrics below to see how the viral referral multiplier dynamically hits 500 students.
+          </p>
+        </div>
+        <div id="funnel-goal-status" class="bg-slate-900 px-4 py-2 rounded-xl border border-slate-800 text-xs">
+          <!-- Injected -->
+        </div>
+      </div>
+
+      <!-- Visual Interactive Step-Down Funnel -->
+      <div class="bg-slate-900/60 p-6 sm:p-8 rounded-3xl border border-slate-800 space-y-6">
+        <h3 class="text-base font-bold text-white flex items-center gap-2">
+          <i data-lucide="filter" class="w-4 h-4 text-blue-400"></i> Visual Conversion Funnel Flow
+        </h3>
+
+        <div class="space-y-4 max-w-3xl mx-auto">
+          
+          <!-- Stage 1: Reach -->
+          <div class="funnel-step bg-slate-800/80 p-4 rounded-xl border border-slate-700/80 flex items-center justify-between text-xs">
+            <div class="flex items-center gap-3">
+              <div class="w-8 h-8 rounded-lg bg-blue-600/20 text-blue-400 flex items-center justify-center font-bold">1</div>
+              <div>
+                <div class="font-bold text-white text-sm">Total Engineering Reach</div>
+                <div class="text-slate-400">Communities × Average Community Size</div>
+              </div>
+            </div>
+            <div class="text-right">
+              <span id="funnel-reach" class="text-lg font-extrabold text-white font-mono">10,000</span>
+              <div class="text-[11px] text-slate-400">Students Reached</div>
+            </div>
+          </div>
+
+          <!-- Stage 2: Visitors -->
+          <div class="funnel-step bg-slate-800/70 p-4 rounded-xl border border-slate-700/70 flex items-center justify-between text-xs ml-4 mr-4">
+            <div class="flex items-center gap-3">
+              <div class="w-8 h-8 rounded-lg bg-cyan-600/20 text-cyan-400 flex items-center justify-center font-bold">2</div>
+              <div>
+                <div class="font-bold text-white text-sm">Landing Page Visitors</div>
+                <div class="text-slate-400">Click-through rate from WhatsApp/Telegram links</div>
+              </div>
+            </div>
+            <div class="text-right">
+              <span id="funnel-visitors" class="text-lg font-extrabold text-cyan-300 font-mono">2,000</span>
+              <div class="text-[11px] text-cyan-400">20% CTR</div>
+            </div>
+          </div>
+
+          <!-- Stage 3: Direct Registrations -->
+          <div class="funnel-step bg-slate-800/60 p-4 rounded-xl border border-slate-700/60 flex items-center justify-between text-xs ml-8 mr-8">
+            <div class="flex items-center gap-3">
+              <div class="w-8 h-8 rounded-lg bg-emerald-600/20 text-emerald-400 flex items-center justify-center font-bold">3</div>
+              <div>
+                <div class="font-bold text-white text-sm">Direct Registrations</div>
+                <div class="text-slate-400">Visitors who complete the registration form</div>
+              </div>
+            </div>
+            <div class="text-right">
+              <span id="funnel-direct" class="text-lg font-extrabold text-emerald-300 font-mono">350</span>
+              <div class="text-[11px] text-emerald-400">17.5% Conversion</div>
+            </div>
+          </div>
+
+          <!-- Stage 4: Students Sharing -->
+          <div class="funnel-step bg-slate-800/50 p-4 rounded-xl border border-slate-700/50 flex items-center justify-between text-xs ml-12 mr-12">
+            <div class="flex items-center gap-3">
+              <div class="w-8 h-8 rounded-lg bg-purple-600/20 text-purple-400 flex items-center justify-center font-bold">4</div>
+              <div>
+                <div class="font-bold text-white text-sm">Students Sharing Referral Link</div>
+                <div class="text-slate-400">Motivated by AI Starter & Builder perks</div>
+              </div>
+            </div>
+            <div class="text-right">
+              <span id="funnel-sharing" class="text-lg font-extrabold text-purple-300 font-mono">140</span>
+              <div class="text-[11px] text-purple-400">40% Participation</div>
+            </div>
+          </div>
+
+          <!-- Stage 5: Viral Referral Registrations -->
+          <div class="funnel-step bg-slate-800/40 p-4 rounded-xl border border-slate-700/40 flex items-center justify-between text-xs ml-16 mr-16">
+            <div class="flex items-center gap-3">
+              <div class="w-8 h-8 rounded-lg bg-amber-600/20 text-amber-400 flex items-center justify-center font-bold">5</div>
+              <div>
+                <div class="font-bold text-white text-sm">Referral Registrations</div>
+                <div class="text-slate-400">Batchmates brought in via shared links</div>
+              </div>
+            </div>
+            <div class="text-right">
+              <span id="funnel-referrals" class="text-lg font-extrabold text-amber-300 font-mono">151</span>
+              <div class="text-[11px] text-amber-400">1.08 avg referrals</div>
+            </div>
+          </div>
+
+          <!-- Total Target Result -->
+          <div class="p-5 rounded-2xl bg-gradient-to-r from-blue-900/60 to-emerald-950/60 border border-emerald-500/40 flex items-center justify-between shadow-xl">
+            <div class="flex items-center gap-3">
+              <div class="w-10 h-10 rounded-xl bg-emerald-500/20 text-emerald-400 flex items-center justify-center text-xl font-bold">🎯</div>
+              <div>
+                <div class="text-base font-extrabold text-white">Total Projected Registrations</div>
+                <div class="text-xs text-slate-300">Direct Registrations (350) + Viral Referrals (151)</div>
+              </div>
+            </div>
+            <div class="text-right">
+              <div id="funnel-total" class="text-3xl font-black text-emerald-400 font-mono">501</div>
+              <div class="text-xs text-slate-300">Viral K-Factor: <strong id="funnel-k-factor" class="text-cyan-400">0.43</strong></div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- EDITABLE ASSUMPTIONS PANEL -->
+      <div class="bg-slate-900/80 p-6 sm:p-8 rounded-3xl border border-slate-800 space-y-6">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-slate-800">
+          <div>
+            <h3 class="text-lg font-bold text-white">Editable Campaign Assumptions</h3>
+            <p class="text-xs text-slate-400">Drag sliders or adjust values to test sensitivity and simulate different funnel scenarios.</p>
+          </div>
+          <button id="reset-assumptions-btn" class="bg-slate-800 hover:bg-slate-700 text-xs font-semibold px-3.5 py-1.5 rounded-lg border border-slate-700 text-slate-300 flex items-center gap-1.5 transition">
+            <i data-lucide="rotate-ccw" class="w-3.5 h-3.5"></i> Reset to Baseline
+          </button>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          
+          <!-- Communities Count -->
+          <div class="space-y-2 bg-slate-950 p-4 rounded-xl border border-slate-800">
+            <div class="flex justify-between text-xs">
+              <span class="font-semibold text-slate-300">1. Number of College Communities:</span>
+              <span id="val-assump-communities" class="font-mono text-cyan-400 font-bold">50</span>
+            </div>
+            <input type="range" id="input-assump-communities" min="10" max="100" step="5" value="50">
+            <div class="text-[11px] text-slate-500">Engineering WhatsApp & Telegram groups targeted across target colleges.</div>
+          </div>
+
+          <!-- Average Community Size -->
+          <div class="space-y-2 bg-slate-950 p-4 rounded-xl border border-slate-800">
+            <div class="flex justify-between text-xs">
+              <span class="font-semibold text-slate-300">2. Average Community Size:</span>
+              <span id="val-assump-size" class="font-mono text-cyan-400 font-bold">200</span>
+            </div>
+            <input type="range" id="input-assump-size" min="50" max="500" step="25" value="200">
+            <div class="text-[11px] text-slate-500">Average active final-year students per group.</div>
+          </div>
+
+          <!-- Click Through Rate -->
+          <div class="space-y-2 bg-slate-950 p-4 rounded-xl border border-slate-800">
+            <div class="flex justify-between text-xs">
+              <span class="font-semibold text-slate-300">3. Link Click-Through Rate (CTR):</span>
+              <span id="val-assump-ctr" class="font-mono text-cyan-400 font-bold">20.0%</span>
+            </div>
+            <input type="range" id="input-assump-ctr" min="5" max="40" step="0.5" value="20.0">
+            <div class="text-[11px] text-slate-500">Driven by curiosity around "Build an AI project in 60 minutes".</div>
+          </div>
+
+          <!-- Registration Conversion Rate -->
+          <div class="space-y-2 bg-slate-950 p-4 rounded-xl border border-slate-800">
+            <div class="flex justify-between text-xs">
+              <span class="font-semibold text-slate-300">4. Registration Page Conversion Rate:</span>
+              <span id="val-assump-conversion" class="font-mono text-cyan-400 font-bold">17.5%</span>
+            </div>
+            <input type="range" id="input-assump-conversion" min="5" max="30" step="0.5" value="17.5">
+            <div class="text-[11px] text-slate-500">Free offer + zero prerequisites leads to strong landing page conversion.</div>
+          </div>
+
+          <!-- Referral Participation Rate -->
+          <div class="space-y-2 bg-slate-950 p-4 rounded-xl border border-slate-800">
+            <div class="flex justify-between text-xs">
+              <span class="font-semibold text-slate-300">5. Referral Sharing Participation:</span>
+              <span id="val-assump-sharing" class="font-mono text-cyan-400 font-bold">40.0%</span>
+            </div>
+            <input type="range" id="input-assump-sharing" min="10" max="80" step="1" value="40.0">
+            <div class="text-[11px] text-slate-500">Percentage of registered students who share their link with batchmates.</div>
+          </div>
+
+          <!-- Average Referrals per Sharing Student -->
+          <div class="space-y-2 bg-slate-950 p-4 rounded-xl border border-slate-800">
+            <div class="flex justify-between text-xs">
+              <span class="font-semibold text-slate-300">6. Avg Successful Referrals / Sharing Student:</span>
+              <span id="val-assump-referrals-avg" class="font-mono text-cyan-400 font-bold">1.08</span>
+            </div>
+            <input type="range" id="input-assump-referrals-avg" min="0.5" max="3.0" step="0.05" value="1.08">
+            <div class="text-[11px] text-slate-500">Number of friends who actually register when invited.</div>
+          </div>
+
+        </div>
+      </div>
+
+    </section>
+
+    <!-- ========================================== -->
+    <!-- VIEW 7: 7-DAY CAMPAIGN PLAN (#view-plan) -->
+    <!-- ========================================== -->
+    <section id="view-plan" class="view-section hidden space-y-6 py-4">
+      
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-2 border-b border-slate-800">
+        <div>
+          <span class="text-xs font-bold text-blue-400 uppercase tracking-widest">Growth Sprint Playbook</span>
+          <h2 class="text-2xl sm:text-3xl font-extrabold text-white mt-1">7-Day Campaign Execution Plan</h2>
+          <p class="text-sm text-slate-400">Day-by-day roadmap designed to ramp registrations smoothly to 500 students.</p>
+        </div>
+        <div class="text-xs text-slate-400 bg-slate-900 px-3 py-1.5 rounded-lg border border-slate-800">
+          Duration: 7 Days Sprint
+        </div>
+      </div>
+
+      <!-- 7-Day Timeline List -->
+      <div id="campaign-plan-timeline" class="space-y-4">
+        <!-- Dynamically rendered via app.js -->
+      </div>
+
+    </section>
+
+    <!-- ========================================== -->
+    <!-- VIEW 8: COLLEGE OUTREACH TRACKER (#view-outreach) -->
+    <!-- ========================================== -->
+    <section id="view-outreach" class="view-section hidden space-y-6 py-4">
+      
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-2 border-b border-slate-800">
+        <div>
+          <span class="text-xs font-bold text-cyan-400 uppercase tracking-widest">Campus Distribution Engine</span>
+          <h2 class="text-2xl sm:text-3xl font-extrabold text-white mt-1">College Outreach Tracker</h2>
+          <p class="text-sm text-slate-400">Track and manage campus ambassadors, WhatsApp groups, and registrations across colleges.</p>
+        </div>
+        <button id="open-add-college-modal-btn" class="bg-blue-600 hover:bg-blue-500 text-white font-semibold text-xs px-4 py-2 rounded-xl transition flex items-center gap-1.5 shadow-md shadow-blue-600/20">
+          <i data-lucide="plus" class="w-4 h-4"></i> Add Target College
+        </button>
+      </div>
+
+      <!-- Outreach Summary Cards -->
+      <div class="grid grid-cols-2 sm:grid-cols-4 gap-4">
+        <div class="bg-slate-900/60 p-4 rounded-xl border border-slate-800">
+          <span class="text-xs text-slate-400 font-semibold uppercase">Total Target Colleges</span>
+          <div id="outreach-total-colleges" class="text-2xl font-extrabold text-white mt-1">12</div>
+        </div>
+        <div class="bg-slate-900/60 p-4 rounded-xl border border-slate-800">
+          <span class="text-xs text-slate-400 font-semibold uppercase">Estimated Student Pool</span>
+          <div id="outreach-total-reach" class="text-2xl font-extrabold text-cyan-400 mt-1">2,840</div>
+        </div>
+        <div class="bg-slate-900/60 p-4 rounded-xl border border-slate-800">
+          <span class="text-xs text-slate-400 font-semibold uppercase">Expected Registrations</span>
+          <div id="outreach-total-expected" class="text-2xl font-extrabold text-blue-400 mt-1">470</div>
+        </div>
+        <div class="bg-slate-900/60 p-4 rounded-xl border border-slate-800">
+          <span class="text-xs text-slate-400 font-semibold uppercase">Actual Registrations</span>
+          <div id="outreach-total-actual" class="text-2xl font-extrabold text-emerald-400 mt-1">398</div>
+        </div>
+      </div>
+
+      <!-- Outreach Table -->
+      <div class="bg-slate-900/80 rounded-2xl border border-slate-800 overflow-hidden shadow-xl">
+        <div class="overflow-x-auto">
+          <table class="w-full text-left custom-table">
+            <thead>
+              <tr>
+                <th>College & Community</th>
+                <th class="text-center">Est. Students</th>
+                <th>Outreach Status</th>
+                <th class="text-center">Expected</th>
+                <th class="text-center">Actual</th>
+                <th>Ambassador</th>
+              </tr>
+            </thead>
+            <tbody id="outreach-table-body">
+              <!-- Dynamically populated -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- ADD COLLEGE MODAL -->
+    <div id="add-college-modal" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4 hidden">
+      <div class="bg-slate-900 border border-slate-700 max-w-md w-full rounded-2xl p-6 space-y-4 shadow-2xl">
+        <div class="flex items-center justify-between pb-3 border-b border-slate-800">
+          <h3 class="text-base font-bold text-white">Add Target College</h3>
+          <button id="close-add-college-modal-btn" class="text-slate-400 hover:text-white">
+            <i data-lucide="x" class="w-5 h-5"></i>
+          </button>
+        </div>
+
+        <form id="add-college-form" class="space-y-3 text-xs">
+          <div>
+            <label class="block font-semibold text-slate-300 mb-1">College Name</label>
+            <input type="text" id="modal-col-name" required placeholder="e.g. BITS Pilani Hyderabad" class="w-full form-input p-2 rounded-lg">
+          </div>
+          <div>
+            <label class="block font-semibold text-slate-300 mb-1">Community Type</label>
+            <input type="text" id="modal-col-comm" placeholder="e.g. WhatsApp Final Year Group, Placement Cell" class="w-full form-input p-2 rounded-lg">
+          </div>
+          <div class="grid grid-cols-2 gap-3">
+            <div>
+              <label class="block font-semibold text-slate-300 mb-1">Estimated Students</label>
+              <input type="number" id="modal-col-est" value="250" class="w-full form-input p-2 rounded-lg">
+            </div>
+            <div>
+              <label class="block font-semibold text-slate-300 mb-1">Expected Regs</label>
+              <input type="number" id="modal-col-exp" value="40" class="w-full form-input p-2 rounded-lg">
+            </div>
+          </div>
+          <div>
+            <label class="block font-semibold text-slate-300 mb-1">Student Ambassador Name</label>
+            <input type="text" id="modal-col-amb" placeholder="e.g. Vikas Reddy" class="w-full form-input p-2 rounded-lg">
+          </div>
+
+          <div class="pt-3">
+            <button type="submit" class="w-full bg-blue-600 hover:bg-blue-500 text-white font-bold py-2.5 rounded-lg transition">
+              Add College to Tracker
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- ========================================== -->
+    <!-- VIEW 9: BUDGET CALCULATOR (#view-budget) -->
+    <!-- ========================================== -->
+    <section id="view-budget" class="view-section hidden space-y-8 py-4">
+      
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-2 border-b border-slate-800">
+        <div>
+          <span class="text-xs font-bold text-emerald-400 uppercase tracking-widest">Growth Economics</span>
+          <h2 class="text-2xl sm:text-3xl font-extrabold text-white mt-1">₹2,000 Campaign Budget Calculator</h2>
+          <p class="text-sm text-slate-400">Total campaign budget is capped at ₹2,000. Customize line items and observe unit economics.</p>
+        </div>
+        <div id="budget-variance-indicator" class="text-xs bg-slate-900 px-3.5 py-2 rounded-xl border border-slate-800">
+          <!-- Dynamically populated -->
+        </div>
+      </div>
+
+      <!-- 3 Top Metric Cards -->
+      <div class="grid grid-cols-1 sm:grid-cols-3 gap-6">
+        <div class="bg-slate-900/60 p-6 rounded-2xl border border-slate-800">
+          <span class="text-xs text-slate-400 font-semibold uppercase tracking-wider">Total Allocated Budget</span>
+          <div id="budget-total-display" class="text-3xl font-extrabold text-white mt-1">₹2,000</div>
+          <div class="text-xs text-slate-400 mt-1">Campaign spending cap</div>
+        </div>
+
+        <div class="bg-slate-900/60 p-6 rounded-2xl border border-slate-800">
+          <span class="text-xs text-slate-400 font-semibold uppercase tracking-wider">Current Registrations</span>
+          <div id="budget-regs-display" class="text-3xl font-extrabold text-emerald-400 mt-1">438</div>
+          <div class="text-xs text-slate-400 mt-1">Towards 500 target</div>
+        </div>
+
+        <div class="bg-slate-900/60 p-6 rounded-2xl border border-slate-800">
+          <span class="text-xs text-slate-400 font-semibold uppercase tracking-wider">Cost Per Registration (CAC)</span>
+          <div id="budget-cpr-display" class="text-3xl font-extrabold text-cyan-400 mt-1">₹4.57</div>
+          <div class="text-xs text-cyan-400/80 mt-1">At 500 registrations = ₹4.00 / student</div>
+        </div>
+      </div>
+
+      <!-- Editable Line Items -->
+      <div class="bg-slate-900/80 p-6 sm:p-8 rounded-3xl border border-slate-800 space-y-6">
+        <div class="flex items-center justify-between pb-4 border-b border-slate-800">
+          <h3 class="text-base font-bold text-white">Editable Budget Allocation</h3>
+          <button id="reset-budget-btn" class="text-xs bg-slate-800 hover:bg-slate-700 text-slate-300 px-3 py-1.5 rounded-lg border border-slate-700 transition flex items-center gap-1">
+            <i data-lucide="rotate-ccw" class="w-3.5 h-3.5"></i> Reset to Default ₹2,000
+          </button>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+          
+          <div class="space-y-2 bg-slate-950 p-4 rounded-xl border border-slate-800">
+            <label class="block text-xs font-semibold text-slate-300">1. Community Promotion & Ambassador Perks (₹)</label>
+            <input type="number" id="budget-input-promo" min="0" step="50" class="w-full form-input p-2.5 rounded-xl text-sm font-mono text-white">
+            <p class="text-[11px] text-slate-500">Micro-incentives for campus ambassadors, WhatsApp group pin rewards, and college club recognition.</p>
+          </div>
+
+          <div class="space-y-2 bg-slate-950 p-4 rounded-xl border border-slate-800">
+            <label class="block text-xs font-semibold text-slate-300">2. Content & Creative Assets (₹)</label>
+            <input type="number" id="budget-input-content" min="0" step="50" class="w-full form-input p-2.5 rounded-xl text-sm font-mono text-white">
+            <p class="text-[11px] text-slate-500">Banner graphics, WhatsApp status teaser reels, copy templates, and workshop slides.</p>
+          </div>
+
+          <div class="space-y-2 bg-slate-950 p-4 rounded-xl border border-slate-800">
+            <label class="block text-xs font-semibold text-slate-300">3. Testing & Cloud Sandbox Infrastructure (₹)</label>
+            <input type="number" id="budget-input-testing" min="0" step="50" class="w-full form-input p-2.5 rounded-xl text-sm font-mono text-white">
+            <p class="text-[11px] text-slate-500">Domain setup, automated reminder testing, API token testing for sample project code.</p>
+          </div>
+
+          <div class="space-y-2 bg-slate-950 p-4 rounded-xl border border-slate-800">
+            <label class="block text-xs font-semibold text-slate-300">4. Contingency Reserve (₹)</label>
+            <input type="number" id="budget-input-contingency" min="0" step="50" class="w-full form-input p-2.5 rounded-xl text-sm font-mono text-white">
+            <p class="text-[11px] text-slate-500">Buffer reserve for last 48-hour broadcast urgency push if registrations lag behind pace.</p>
+          </div>
+
+        </div>
+
+        <!-- Industry Benchmark Comparison Card -->
+        <div class="p-5 rounded-2xl bg-slate-950 border border-slate-800 space-y-3">
+          <div class="text-xs font-bold text-emerald-400 uppercase tracking-wider flex items-center gap-1.5">
+            <i data-lucide="zap" class="w-4 h-4"></i> Unit Economics Comparison
+          </div>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
+            <div class="bg-slate-900/80 p-3.5 rounded-xl border border-slate-800">
+              <span class="text-slate-400">Traditional EdTech Paid Ads CAC:</span>
+              <div class="text-lg font-bold text-red-400 mt-1">₹150 - ₹300 / Lead</div>
+              <p class="text-[11px] text-slate-500 mt-1">Meta & Google Ads burn high capital with lower intent and higher drop-offs.</p>
+            </div>
+            <div class="bg-blue-950/40 p-3.5 rounded-xl border border-blue-500/30">
+              <span class="text-slate-300">This NxtWave Community & Viral Referral Model:</span>
+              <div class="text-lg font-bold text-emerald-400 mt-1">₹4.00 / Verified Student</div>
+              <p class="text-[11px] text-slate-400 mt-1">Leverages peer trust, college communities, and gamified incentives for ultra-low acquisition cost.</p>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+    </section>
+
+  </main>
+
+  <!-- ========================================== -->
+  <!-- 3-MINUTE INTERVIEW PITCH TOUR MODAL -->
+  <!-- ========================================== -->
+  <div id="tour-modal" class="fixed inset-0 z-50 bg-black/85 backdrop-blur-md flex items-center justify-center p-4 hidden">
+    <div class="bg-slate-900 border border-slate-700 max-w-2xl w-full rounded-3xl p-6 sm:p-8 space-y-6 shadow-2xl relative max-h-[90vh] overflow-y-auto">
+      <div class="flex items-center justify-between pb-3 border-b border-slate-800">
+        <div class="flex items-center gap-2">
+          <span class="w-2.5 h-2.5 rounded-full bg-blue-500 animate-ping"></span>
+          <h3 class="text-lg font-bold text-white">3-Minute Interview Presentation Playbook</h3>
+        </div>
+        <button id="close-tour-btn" class="text-slate-400 hover:text-white p-1 rounded-lg">
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+      </div>
+
+      <div class="space-y-4 text-xs text-slate-300">
+        <div class="bg-slate-950 p-4 rounded-xl border border-slate-800 space-y-1.5">
+          <div class="font-bold text-blue-400 text-sm">Minute 1: The Core Value Proposition & The "60-Minute Hook"</div>
+          <p class="leading-relaxed text-slate-300">
+            Explain the student psychology: Final-year engineering students face urgent placement anxiety. Instead of long courses, "Build Your First AI Project in 60 Minutes" offers an instant tangible win — a working ATS AI Resume Screener deployed live for their GitHub and resume.
+          </p>
+        </div>
+
+        <div class="bg-slate-950 p-4 rounded-xl border border-slate-800 space-y-1.5">
+          <div class="font-bold text-emerald-400 text-sm">Minute 2: The Viral Referral Gamification Engine</div>
+          <p class="leading-relaxed text-slate-300">
+            Showcase the immediate post-registration referral dashboard. Final-year students study in hostel and project groups. By offering high-utility perks (Starter Code Pack at 1 referral, Certificate upgrade at 3, VIP Q&A at 5, and 1-on-1 Mentorship at 20), we turn every registered student into an active recruiter (K-factor > 0.4).
+          </p>
+        </div>
+
+        <div class="bg-slate-950 p-4 rounded-xl border border-slate-800 space-y-1.5">
+          <div class="font-bold text-cyan-400 text-sm">Minute 3: Distribution, College Outreach & ₹2,000 Budget Efficiency</div>
+          <p class="leading-relaxed text-slate-300">
+            Walk through the College Outreach Tracker (50 communities × 200 members = 10,000 reach). Point out the budget unit economics: With ₹2,000 total budget across 500 registrations, our Cost per Acquisition is ₹4.00, compared to industry average of ₹200+.
+          </p>
+        </div>
+      </div>
+
+      <div class="pt-2 flex justify-end">
+        <button onclick="document.getElementById('tour-modal').classList.add('hidden')" class="bg-blue-600 hover:bg-blue-500 text-white font-bold px-6 py-2 rounded-xl text-xs">
+          Got It, Start Demo!
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <footer class="bg-slate-950 border-t border-slate-900 py-8 text-xs text-slate-500">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-4">
+      <div class="flex items-center gap-2">
+        <div class="w-6 h-6 rounded-lg bg-blue-600 text-white flex items-center justify-center font-bold text-xs">N</div>
+        <span class="text-slate-400 font-semibold">NxtWave AI 60 Campaign Prototype</span>
+      </div>
+      <div>
+        Designed for Growth & Recruitment Challenge Evaluation • Simulated Prototype
+      </div>
+    </div>
+  </footer>
+
+  <!-- Scripts in dependency order -->
+  <script src="js/data.js"></script>
+  <script src="js/store.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
