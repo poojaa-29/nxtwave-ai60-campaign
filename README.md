@@ -23,41 +23,6 @@ Open **[http://localhost:3000](http://localhost:3000)**.
 
 ---
 
-## ⏱️ 3-Minute Interview Walkthrough Guide
-
-Use this exact narrative during your interview / assessment:
-
-### Minute 1: The Core Value Proposition & "60-Minute Hook"
-- **The Pain Point:** Final-year engineering students face acute campus placement anxiety. Recruiters reject generic e-commerce or library management academic projects.
-- **The Hook:** *"Build Your First AI Project in 60 Minutes"* offers an instant, high-urgency win.
-- **The Workshop Deliverable:** A real, functioning **AI Resume Screener & Recruiter Q&A Agent** deployed live with a shareable URL and clean GitHub repo link. Zero prior AI/GPU setup required.
-
-### Minute 2: The Viral Referral Gamification Engine
-- **Frictionless Registration:** Name, Email, WhatsApp Phone, College, Branch, Grad Year (`2025`).
-- **Instant Referral Hub:** Upon registration, each student immediately receives a unique referral code (`NXT-NAME-XXX`) and shareable link.
-- **5 Gamification Tiers:**
-  1. **1 Referral** → **AI Starter** (*Curated AI Project Source Code Pack*)
-  2. **3 Referrals** → **AI Builder** (*Verified Priority Certificate & Digital Badge*)
-  3. **5 Referrals** → **AI Explorer** (*VIP 30-min Q&A with Senior AI Architect*)
-  4. **10 Referrals** → **AI Accelerator** (*AI Resume & Portfolio Audit Template*)
-  5. **20 Referrals** → **AI Champion** (*1-on-1 Mentorship + NxtWave Exclusive Tech Swag Pack*)
-- **Interactive Live Demo:** Click the **"+1 Referral"** or **"+3 Referrals"** simulation buttons on the Student Referral Hub to watch the progress bar animate, badges unlock, and rank climb on the live leaderboard in real time!
-
-### Minute 3: Distribution, College Outreach & ₹2,000 Budget Unit Economics
-- **College Outreach Tracker:** 50 targeted WhatsApp/Telegram groups across 12+ top engineering colleges (JNTU-H, CBIT, VNR VJIET, Vasavi, SRM, VIT, etc.) reaching an estimated 10,000 students.
-- **Dynamic 500-Registration Funnel:**
-  - Reach: 10,000 students
-  - Visitors (20% CTR): 2,000
-  - Direct Registrations (17.5%): 350
-  - Students Sharing (40%): 140
-  - Viral Referrals (1.08 avg): 151
-  - **Total Projected Registrations = 501**
-- **Editable Assumptions:** Move sliders for community count, conversion rate, and referral participation to show sensitivity analysis.
-- **Budget & CAC:** Total budget is **₹2,000**.
-  $$\text{CAC} = \frac{₹2,000}{500} = ₹4.00 \text{ per student}$$
-  *(Compared to ₹150–₹300 CAC in traditional EdTech paid ads).*
-
----
 
 ## 🛠️ Complete Feature Matrix
 
